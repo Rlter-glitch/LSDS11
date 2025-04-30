@@ -2,26 +2,22 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trắc Nghiệm Lịch Sử</title>
+    <title>Quiz Lịch Sử</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>TRẮC NGHIỆM LỊCH SỬ VIỆT NAM</h1>
-    
+    <h1>Bài kiểm tra trắc nghiệm Lịch sử</h1>
+
     <div id="quiz-container"></div>
-    
+
     <div class="navigation">
-        <button id="prev-btn" class="hidden">Câu trước</button>
-        <button id="next-btn">Câu tiếp theo</button>
+        <button id="prev-btn">Câu trước</button>
+        <button id="next-btn">Câu tiếp</button>
     </div>
-    
-    <div class="score">
-        Điểm: <span id="score">0</span>/<span id="total-questions">0</span>
-    </div>
-    
+
     <button id="submit-btn">Nộp bài</button>
-    <button id="restart-btn" class="hidden">Làm lại</button>
+
+    <div id="final-score" class="score hidden"></div>
 
     <script src="script.js"></script>
 </body>
