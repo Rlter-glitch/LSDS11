@@ -161,48 +161,42 @@ let userAnswers = [];
 let quizSubmitted = false;
 
 function initQuiz() {
-    document.getElementById('total-questions').textContent = questions.length;
     showQuestion(currentQuestion);
 }
 
 function showQuestion(index) {
     const quizContainer = document.getElementById('quiz-container');
     const question = questions[index];
-    
+
     let html = `
         <div class="question-text">${question.question}</div>
         <div class="document-text">${question.document}</div>
         <div class="options">
     `;
-    
+
     question.options.forEach((option, i) => {
-        const isChecked = userAnswers[index] && userAnswers[index][i] !== undefined ? 
-            userAnswers[index][i] : false;
-        
+        const isChecked = userAnswers[index]?.[i] || false;
+
         html += `
             <div class="option">
-                <input type="checkbox" id="option-${i}" data-index="${i}" 
-                    ${isChecked ? 'checked' : ''} 
-                    ${quizSubmitted ? 'disabled' : ''}>
+                <input type="checkbox" id="option-${i}" data-index="${i}" ${isChecked ? 'checked' : ''} ${quizSubmitted ? 'disabled' : ''}>
                 <label for="option-${i}">${option}</label>
             </div>
         `;
     });
-    
+
     html += `</div>`;
-    
+
     if (quizSubmitted) {
         let resultHtml = '';
         let allCorrect = true;
-        
+
         for (let i = 0; i < question.options.length; i++) {
-            const userAnswer = userAnswers[index] ? userAnswers[index][i] : false;
+            const userAnswer = userAnswers[index]?.[i] || false;
             const isCorrect = userAnswer === question.answers[i];
-            
-            if (!isCorrect) {
-                allCorrect = false;
-            }
-            
+
+            if (!isCorrect) allCorrect = false;
+
             resultHtml += `
                 <div class="option-result">
                     Câu ${String.fromCharCode(97 + i)}: 
@@ -212,7 +206,7 @@ function showQuestion(index) {
                 </div>
             `;
         }
-        
+
         html += `
             <div class="result ${allCorrect ? 'correct' : 'incorrect'}">
                 ${allCorrect ? 'Chính xác!' : 'Chưa chính xác!'}
@@ -222,12 +216,12 @@ function showQuestion(index) {
             </div>
         `;
     }
-    
+
     quizContainer.innerHTML = html;
-    
+
     if (!quizSubmitted) {
         document.querySelectorAll('.option input').forEach(checkbox => {
-            checkbox.addEventListener('change', function() {
+            checkbox.addEventListener('change', function () {
                 const optionIndex = parseInt(this.getAttribute('data-index'));
                 if (!userAnswers[index]) {
                     userAnswers[index] = [];
@@ -238,4 +232,35 @@ function showQuestion(index) {
     }
 
     document.getElementById('prev-btn').classList.toggle('hidden', index === 0);
-    document.get
+    document.getElementById('next-btn').classList.toggle('hidden', index === questions.length - 1);
+}
+
+document.getElementById('prev-btn').addEventListener('click', () => {
+    if (currentQuestion > 0) {
+        currentQuestion--;
+        showQuestion(currentQuestion);
+    }
+});
+
+document.getElementById('next-btn').addEventListener('click', () => {
+    if (currentQuestion < questions.length - 1) {
+        currentQuestion++;
+        showQuestion(currentQuestion);
+    }
+});
+
+document.getElementById('submit-btn').addEventListener('click', () => {
+    quizSubmitted = true;
+    score = 0;
+
+    questions.forEach((q, i) => {
+        const allCorrect = q.answers.every((a, index) => userAnswers[i]?.[index] === a);
+        if (allCorrect) score++;
+    });
+
+    document.getElementById('final-score').textContent = `Điểm của bạn: ${score}/${questions.length}`;
+    document.getElementById('final-score').classList.remove('hidden');
+    showQuestion(currentQuestion);
+});
+
+initQuiz();
